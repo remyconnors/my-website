@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Squid Watch · Boston</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ------------------------------------------------------------------ *
+   * SQUID WATCH — is tonight a night to go?                            *
+   * Palette: harbor water at night. Phosphor-green is the squid-jig     *
+   * glow (GO); sodium-amber is pier light (marginal); coral is no-go.   *
+   * ------------------------------------------------------------------ */
+  :root{
+    --abyss:   #06121c;
+    --deep:    #0c2130;
+    --surface: #123047;
+    --line:    #1d4257;
+    --moon:    #eaf3f7;   /* moonlight — primary text */
+    --slate:   #82a3b8;   /* secondary text */
+    --slate-d: #567387;   /* tertiary / captions */
+    --glow:    #74ffc2;   /* phosphor — GO */
+    --sodium:  #ffc776;   /* pier light — MARGINAL */
+    --coral:   #ff7d6b;   /* NO-GO */
+    --go: var(--glow); --marginal: var(--sodium); --nogo: var(--coral);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{
+    background:
+      radial-gradient(120% 80% at 50% -10%, #0e2637 0%, var(--abyss) 55%, #040c14 100%);
+    color:var(--moon);
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    padding:clamp(18px,4vw,40px);
+    display:flex; justify-content:center;
+  }
+  .wrap{ width:100%; max-width:680px; }
+
+  /* --- masthead --- */
+  header{ display:flex; align-items:baseline; justify-content:space-between;
+    gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--line);
+    padding-bottom:14px; margin-bottom:clamp(26px,6vw,44px); }
+  .brand{ font-family:"Space Grotesk",sans-serif; font-weight:700;
+    font-size:clamp(20px,5vw,26px); letter-spacing:-0.01em; }
+  .brand .dot{ color:var(--glow); }
+  .subhead{ color:var(--slate-d); font-size:12px; letter-spacing:0.14em;
+    text-transform:uppercase; }
+  .when{ text-align:right; color:var(--slate); font-size:12.5px; line-height:1.5; }
+  .when b{ color:var(--moon); font-weight:500; }
+
+  /* --- the beacon (hero) --- */
+  .beacon{ text-align:center; margin:0 0 clamp(30px,7vw,50px); }
+  .disc{ position:relative; width:210px; height:210px; margin:0 auto 22px;
+    display:grid; place-items:center; }
+  .disc .ring{ position:absolute; inset:0; border-radius:50%;
+    border:1px solid var(--line);
+    background:
+      radial-gradient(circle at 50% 42%,
+        color-mix(in srgb, var(--vcolor,#74ffc2) 26%, transparent) 0%,
+        color-mix(in srgb, var(--vcolor,#74ffc2) 8%, transparent) 38%,
+        transparent 66%);
+    box-shadow: 0 0 60px -6px color-mix(in srgb, var(--vcolor,#74ffc2) 55%, transparent),
+                inset 0 0 40px -14px color-mix(in srgb, var(--vcolor,#74ffc2) 60%, transparent);
+    animation:breathe 5.5s ease-in-out infinite;
+  }
+  @keyframes breathe{ 0%,100%{ transform:scale(1); opacity:.92; }
+    50%{ transform:scale(1.035); opacity:1; } }
+  .verdict{ font-family:"Space Grotesk",sans-serif; font-weight:700;
+    font-size:clamp(46px,14vw,70px); line-height:.94; letter-spacing:-0.03em;
+    color:var(--vcolor,#74ffc2); position:relative; z-index:1; }
+  .verdict small{ display:block; font-size:13px; font-weight:500; letter-spacing:.28em;
+    text-transform:uppercase; color:var(--slate); margin-top:12px;
+    font-family:"IBM Plex Mono",monospace; }
+  .reason{ max-width:44ch; margin:0 auto; color:var(--moon);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:clamp(15px,3.6vw,17px); line-height:1.5; }
+  .reason .accent{ color:var(--vcolor,#74ffc2); }
+
+  /* --- instrument cards --- */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media (max-width:560px){ .cards{ grid-template-columns:1fr; } }
+  .card{ background:linear-gradient(180deg, var(--deep), var(--abyss));
+    border:1px solid var(--line); border-radius:14px; padding:16px 16px 18px;
+    display:flex; flex-direction:column; gap:10px; position:relative; overflow:hidden; }
+  .card .eyebrow{ display:flex; align-items:center; justify-content:space-between;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--slate-d); }
+  .chip{ font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    padding:3px 8px; border-radius:999px; border:1px solid currentColor; font-weight:500; }
+  .chip.prime{ color:var(--glow); } .chip.fair{ color:var(--sodium); }
+  .chip.poor{ color:var(--coral); } .chip.na{ color:var(--slate-d); }
+  .value{ font-family:"Space Grotesk",sans-serif; font-weight:600;
+    font-size:clamp(24px,6vw,30px); line-height:1; letter-spacing:-0.01em; }
+  .value .u{ font-size:14px; color:var(--slate); font-weight:500; margin-left:2px; }
+  .detail{ font-size:12.5px; color:var(--slate); line-height:1.45; margin-top:auto; }
+
+  /* moon visual */
+  .moonwrap{ display:flex; align-items:center; gap:12px; }
+  .moonwrap svg{ flex:0 0 auto; filter:drop-shadow(0 0 8px rgba(234,243,247,.25)); }
+
+  /* tide session gauge */
+  .gauge{ margin-top:2px; }
+  .gauge .track{ position:relative; height:8px; border-radius:5px;
+    background:var(--surface); border:1px solid var(--line); }
+  .gauge .ideal{ position:absolute; top:0; bottom:0; border-radius:5px;
+    background:color-mix(in srgb, var(--glow) 24%, transparent); }
+  .gauge .peak{ position:absolute; top:50%; width:11px; height:11px; border-radius:50%;
+    transform:translate(-50%,-50%); background:var(--moon);
+    box-shadow:0 0 0 3px var(--abyss), 0 0 10px 1px var(--vcolor,#74ffc2); }
+  .gauge .peak.out{ background:var(--slate); box-shadow:0 0 0 3px var(--abyss); }
+  .gauge .ends{ display:flex; justify-content:space-between; margin-top:6px;
+    font-size:10px; color:var(--slate-d); letter-spacing:.04em; }
+
+  /* --- footer / controls --- */
+  footer{ margin-top:26px; display:flex; align-items:center; justify-content:space-between;
+    gap:14px; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:16px;
+    font-size:11.5px; color:var(--slate-d); letter-spacing:.03em; }
+  footer a{ color:var(--slate); text-decoration:none; border-bottom:1px solid var(--line); }
+  footer a:hover{ color:var(--moon); }
+  button.refresh{ font-family:"IBM Plex Mono",monospace; font-size:12px;
+    letter-spacing:.06em; color:var(--moon); background:var(--surface);
+    border:1px solid var(--line); border-radius:8px; padding:8px 14px; cursor:pointer;
+    transition:border-color .15s, background .15s; }
+  button.refresh:hover{ border-color:var(--glow); background:var(--deep); }
+  button.refresh:focus-visible{ outline:2px solid var(--glow); outline-offset:2px; }
+  button.refresh:disabled{ opacity:.5; cursor:default; }
+
+  /* loading / error states */
+  .banner{ border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+    color:var(--slate); font-size:13px; background:var(--deep); margin-bottom:18px;
+    display:none; }
+  .banner.show{ display:block; }
+  .banner.err{ border-color:color-mix(in srgb,var(--coral) 55%, var(--line));
+    color:var(--coral); }
+  .skeleton{ opacity:.35; }
+
+  @media (prefers-reduced-motion: reduce){
+    .disc .ring{ animation:none; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="brand">Should I go squid fishing tonight?</span></div>
+      <div class="subhead">Boston Harbor · 9&nbsp;PM–Midnight</div>
+    </div>
+    <div class="when" id="when">
+      <div><b id="tonight">tonight</b></div>
+      <div id="updated">reading the harbor…</div>
+    </div>
+  </header>
+
+  <div class="banner" id="banner" role="status"></div>
+
+  <section class="beacon" aria-live="polite">
+    <div class="disc"><div class="ring" id="ring"></div>
+      <div class="verdict" id="verdict">· · ·<small id="verdict-sub">checking conditions</small></div>
+    </div>
+    <p class="reason" id="reason">Pulling moon phase, tide predictions, and sea state for tonight’s window.</p>
+  </section>
+
+  <section class="cards" id="cards">
+    <!-- MOON -->
+    <div class="card" id="c-moon">
+      <div class="eyebrow"><span>Moon</span><span class="chip na" id="moon-chip">—</span></div>
+      <div class="moonwrap">
+        <svg id="moon-svg" width="52" height="52" viewBox="0 0 100 100" aria-hidden="true"></svg>
+        <div class="value" id="moon-val">—<span class="u">lit</span></div>
+      </div>
+      <div class="detail" id="moon-detail">Darker is better — squid come to the lights.</div>
+    </div>
+    <!-- TIDE -->
+    <div class="card" id="c-tide">
+      <div class="eyebrow"><span>High tide</span><span class="chip na" id="tide-chip">—</span></div>
+      <div class="value" id="tide-val">—</div>
+      <div class="gauge" aria-hidden="true">
+        <div class="track">
+          <div class="ideal" id="tide-ideal"></div>
+          <div class="peak out" id="tide-peak" style="left:50%"></div>
+        </div>
+        <div class="ends"><span>9 PM</span><span>11 PM</span><span>1 AM</span></div>
+      </div>
+      <div class="detail" id="tide-detail">Best when the peak lands late in your session.</div>
+    </div>
+    <!-- SEAS -->
+    <div class="card" id="c-seas">
+      <div class="eyebrow"><span>Seas</span><span class="chip na" id="seas-chip">—</span></div>
+      <div class="value" id="seas-val">—<span class="u">ft</span></div>
+      <div class="detail" id="seas-detail">Wind and swell across the window.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Data: <a href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8443970" target="_blank" rel="noopener">NOAA&nbsp;8443970</a> · <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Conditions guide only. Check the real forecast before you head out.</div>
+    <button class="refresh" id="refresh" type="button">Check again</button>
+  </footer>
+</div>
+
+<script>
+/* ============================ CONFIG ============================ *
+ * Everything you'd want to tweak lives here.                        */
+const CONFIG = {
+  tz: "America/New_York",
+  tideStation: "8443970",            // NOAA Boston
+  wave: { lat: 42.34, lng: -70.90 }, // just outside the harbor entrance (better wave coverage)
+  wind: { lat: 42.355, lng: -71.05 },// Boston
+  session: { startHour: 21, endHour: 24 },   // 9 PM → midnight
+  // tide-peak windows, in "hours since session-day midnight" (24.5 = 12:30 AM next day)
+  tideWindow: { idealStart: 22.5, idealEnd: 24.5, okStart: 21.0, okEnd: 25.5 },
+  moon: { prime: 0.12, fair: 0.35 },                       // illuminated fraction
+  seas: { calmWaveM: 0.5, calmWindKn: 10, chopWaveM: 1.0, chopWindKn: 15 },
+};
+
+/* ============================ HELPERS ============================ */
+const $ = (id) => document.getElementById(id);
+
+function etNow() {
+  return new Date(new Date().toLocaleString("en-US", { timeZone: CONFIG.tz }));
+}
+function ymd(d) {
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+}
+function prettyDate(d) {
+  return d.toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric" });
+}
+function prettyTime(d) {
+  return d.toLocaleTimeString("en-US", { hour:"numeric", minute:"2-digit" });
+}
+// "HH:MM" from decimal hours (may exceed 24 → wrap to AM)
+function hoursToClock(h) {
+  let hh = Math.floor(h % 24), mm = Math.round((h - Math.floor(h)) * 60);
+  if (mm === 60) { mm = 0; hh = (hh + 1) % 24; }
+  const ampm = hh >= 12 ? "PM" : "AM";
+  let h12 = hh % 12; if (h12 === 0) h12 = 12;
+  return `${h12}:${String(mm).padStart(2,"0")} ${ampm}`;
+}
+
+/* ---- MOON: phase from a known new-moon epoch ---- */
+function moonInfo(date) {
+  const synodic = 29.53058867;
+  const knownNew = Date.UTC(2000, 0, 6, 18, 14, 0) / 86400000;
+  const now = date.getTime() / 86400000;
+  let age = (now - knownNew) % synodic;
+  if (age < 0) age += synodic;
+  const illum = (1 - Math.cos((2 * Math.PI * age) / synodic)) / 2;
+  return { age, illum, waxing: age < synodic / 2 };
+}
+function moonName(age) {
+  if (age < 1.6 || age > 27.9) return "new moon";
+  if (age < 6.4)  return "waxing crescent";
+  if (age < 8.4)  return "first quarter";
+  if (age < 13.8) return "waxing gibbous";
+  if (age < 15.8) return "full moon";
+  if (age < 21.1) return "waning gibbous";
+  if (age < 23.1) return "last quarter";
+  return "waning crescent";
+}
+function moonPath(f, waxing, r, cx, cy) {
+  f = Math.max(0, Math.min(1, f));
+  const outer = waxing ? 1 : 0;
+  const inner = f > 0.5 ? outer : 1 - outer;
+  const rx = Math.abs(r * (1 - 2 * f));
+  return `M ${cx} ${cy-r} A ${r} ${r} 0 0 ${outer} ${cx} ${cy+r} A ${rx} ${r} 0 0 ${inner} ${cx} ${cy-r} Z`;
+}
+function drawMoon(illum, waxing) {
+  const r=42, cx=50, cy=50;
+  $("moon-svg").innerHTML =
+    `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#0a1b26" stroke="#1d4257"/>` +
+    `<path d="${moonPath(illum, waxing, r, cx, cy)}" fill="#eaf3f7"/>`;
+}
+
+/* ---- RATINGS ---- */
+const rateMoon = (illum) => illum <= CONFIG.moon.prime ? 2 : illum <= CONFIG.moon.fair ? 1 : 0;
+function rateTide(hi) {
+  if (!hi) return 0;
+  const w = CONFIG.tideWindow, t = hi.h;
+  if (t >= w.idealStart && t <= w.idealEnd) return 2;
+  if (t >= w.okStart && t <= w.okEnd) return 1;
+  return 0;
+}
+function rateSeas(waveM, windKn) {
+  const s = CONFIG.seas;
+  if (waveM == null) {
+    if (windKn == null) return null;
+    return windKn <= s.calmWindKn ? 2 : windKn <= s.chopWindKn ? 1 : 0;
+  }
+  const windOK1 = windKn == null || windKn <= s.calmWindKn;
+  const windOK2 = windKn == null || windKn <= s.chopWindKn;
+  if (waveM <= s.calmWaveM && windOK1) return 2;
+  if (waveM <= s.chopWaveM && windOK2) return 1;
+  return 0;
+}
+function verdict(m, t, s) {
+  if (s === 0) return "NOGO";
+  if (m === 0 || t === 0) return "MARGINAL";
+  if (m === 2 && t === 2 && s === 2) return "PRIME";
+  return "GO";
+}
+
+/* ============================ FETCHERS ============================ */
+async function getTides(today, tomorrow) {
+  const url = `https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions`
+    + `&application=squidwatch_boston&begin_date=${ymd(today)}&end_date=${ymd(tomorrow)}`
+    + `&datum=MLLW&station=${CONFIG.tideStation}&time_zone=lst_ldt&units=english&interval=hilo&format=json`;
+  const r = await fetch(url);
+  const j = await r.json();
+  if (j.error) throw new Error(j.error.message || "tide API error");
+  const tKey = ymd(today), tomKey = ymd(tomorrow);
+  return (j.predictions || []).map((p) => {
+    // p.t = "YYYY-MM-DD HH:MM" in station local time
+    const [dstr, hm] = p.t.split(" ");
+    const dkey = dstr.replace(/-/g, "");
+    const [H, M] = hm.split(":").map(Number);
+    let h = H + M / 60;
+    if (dkey === tomKey) h += 24;
+    else if (dkey !== tKey) return null; // ignore stray dates
+    return { h, type: p.type, v: parseFloat(p.v), clock: hoursToClock(h) };
+  }).filter(Boolean);
+}
+
+async function getHourly(url, field) {
+  const r = await fetch(url);
+  const j = await r.json();
+  if (!j.hourly || !j.hourly.time) throw new Error("weather API error");
+  return j.hourly.time.map((t, i) => ({ t, v: j.hourly[field][i] }));
+}
+async function getWaves(today, tomorrow) {
+  const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${CONFIG.wave.lat}`
+    + `&longitude=${CONFIG.wave.lng}&hourly=wave_height&timezone=${encodeURIComponent(CONFIG.tz)}&forecast_days=2`;
+  return getHourly(url, "wave_height");
+}
+async function getWind(today, tomorrow) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${CONFIG.wind.lat}`
+    + `&longitude=${CONFIG.wind.lng}&hourly=wind_speed_10m&wind_speed_unit=kn`
+    + `&timezone=${encodeURIComponent(CONFIG.tz)}&forecast_days=2`;
+  return getHourly(url, "wind_speed_10m");
+}
+// max value across the session hours (21,22,23, midnight) for a given ET date
+function sessionMax(series, today, tomorrow) {
+  const tKey = ymd(today), tomKey = ymd(tomorrow);
+  let max = null;
+  for (const row of series) {
+    if (row.v == null) continue;
+    const [dstr, hm] = row.t.split("T");
+    const dkey = dstr.replace(/-/g, "");
+    const H = parseInt(hm.split(":")[0], 10);
+    let h = H; if (dkey === tomKey) h += 24; else if (dkey !== tKey) continue;
+    if (h >= CONFIG.session.startHour && h <= CONFIG.session.endHour) {
+      max = max == null ? row.v : Math.max(max, row.v);
+    }
+  }
+  return max;
+}
+
+/* ============================ RENDER ============================ */
+const VCOLOR = { PRIME:"var(--go)", GO:"var(--go)", MARGINAL:"var(--marginal)", NOGO:"var(--nogo)" };
+const CHIP = { 2:["prime","Prime"], 1:["fair","Fair"], 0:["poor","Poor"], null:["na","No data"] };
+
+function setChip(id, score) {
+  const [cls, label] = CHIP[score] ?? CHIP.null;
+  const el = $(id); el.className = `chip ${cls}`; el.textContent = label;
+}
+
+function render(data) {
+  const { moon, tide, seas, m, t, s, updated, tonightLabel } = data;
+  const v = verdict(m, t, s);
+
+  // --- beacon ---
+  document.documentElement.style.setProperty("--vcolor", VCOLOR[v]);
+  const words = { PRIME:"GO", GO:"GO", MARGINAL:"MAYBE", NOGO:"NO-GO" };
+  const subs  = { PRIME:"prime conditions", GO:"worth a trip", MARGINAL:"your call", NOGO:"sit it out" };
+  $("verdict").innerHTML = `${words[v]}<small>${subs[v]}</small>`;
+  $("verdict").style.color = VCOLOR[v];
+
+  // --- reason line ---
+  $("reason").innerHTML = buildReason(v, data);
+
+  // --- moon card ---
+  drawMoon(moon.illum, moon.waxing);
+  $("moon-val").innerHTML = `${Math.round(moon.illum*100)}<span class="u">% lit</span>`;
+  $("moon-detail").textContent = capitalize(moonName(moon.age)) + ".";
+  setChip("moon-chip", m);
+
+  // --- tide card ---
+  if (tide.high) {
+    $("tide-val").textContent = tide.high.clock;
+    $("tide-detail").textContent = tideDetail(t, tide.high);
+    positionPeak(tide.high.h);
+  } else {
+    $("tide-val").textContent = "—";
+    $("tide-detail").textContent = "No high tide near your window tonight.";
+  }
+  setChip("tide-chip", t);
+
+  // --- seas card ---
+  const ft = seas.waveM == null ? null : seas.waveM * 3.28084;
+  $("seas-val").innerHTML = ft == null
+    ? (seas.windKn == null ? "—" : `${Math.round(seas.windKn)}<span class="u">kn wind</span>`)
+    : `${ft.toFixed(1)}<span class="u">ft swell</span>`;
+  $("seas-detail").textContent = seasDetail(s, seas);
+  setChip("seas-chip", s);
+
+  // --- footer ---
+  $("tonight").textContent = tonightLabel;
+  $("updated").textContent = `updated ${updated}`;
+}
+
+function positionPeak(h) {
+  // gauge spans 9 PM (21.0) → 1 AM (25.0)
+  const lo = 21, hi = 25;
+  const clamped = Math.max(lo, Math.min(hi, h));
+  const pct = ((clamped - lo) / (hi - lo)) * 100;
+  const peak = $("tide-peak");
+  peak.style.left = pct + "%";
+  peak.classList.toggle("out", h < lo || h > hi);
+  // ideal window shading 22:30 → 00:30
+  const iLo = ((22.5 - lo) / (hi - lo)) * 100;
+  const iHi = ((24.5 - lo) / (hi - lo)) * 100;
+  $("tide-ideal").style.left = iLo + "%";
+  $("tide-ideal").style.width = (iHi - iLo) + "%";
+}
+
+/* ---- copy generators ---- */
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+function tideDetail(t, hi) {
+  if (t === 2) return "Peak lands right in the sweet spot.";
+  if (t === 1) return hi.h < 22.5 ? "Peaks early, falling by end of session." : "Still climbing through your window.";
+  return "Peak is well outside your window.";
+}
+function seasDetail(s, seas) {
+  const w = seas.windKn == null ? "" : ` · ${Math.round(seas.windKn)} kn wind`;
+  if (s === 2) return "Calm" + w + ".";
+  if (s === 1) return "A little chop" + w + ".";
+  if (s === 0) return "Rough out there" + w + ".";
+  return "Sea-state data unavailable.";
+}
+function buildReason(v, d) {
+  const moonPhrase = d.m === 2 ? "New-moon dark" : d.m === 1 ? "Moon is dim enough" : "Bright moon";
+  const tidePhrase = d.tide.high
+    ? (d.t >= 1 ? `high tide ${d.tide.high.clock}` : `high tide off-window (${d.tide.high.clock})`)
+    : "no useful high tide";
+  const seasPhrase = d.s === 2 ? "calm seas" : d.s === 1 ? "a bit of chop" : d.s === 0 ? "rough water" : "unknown seas";
+  const acc = (txt) => `<span class="accent">${txt}</span>`;
+  if (v === "NOGO" && d.s === 0)
+    return `${acc("Rough water")} tonight; even with ${moonPhrase.toLowerCase()} and ${tidePhrase}, not worth the trip.`;
+  if (v === "MARGINAL" && d.m === 0)
+    return `${acc("Too much moon")} tonight (${Math.round(d.moon.illum*100)}% lit).`;
+  if (v === "MARGINAL" && d.t === 0)
+    return `${acc("Tide timing is not ideal.")} — ${tideDetail(d.t, d.tide.high || {h:0})} However, the ${moonPhrase} and water is looking like ${seasPhrase}, so results may vary.`;
+  if (v === "PRIME")
+    return `${acc("Everything lines up")}: ${moonPhrase.toLowerCase()}, ${tidePhrase}, ${seasPhrase}. Go get ’em.`;
+  return `${acc("Decent night")}: ${moonPhrase.toLowerCase()}, ${tidePhrase}, ${seasPhrase}.`;
+}
+
+/* ---- banners ---- */
+function banner(msg, isErr) {
+  const b = $("banner");
+  b.textContent = msg;
+  b.className = "banner show" + (isErr ? " err" : "");
+}
+function clearBanner(){ $("banner").className = "banner"; }
+
+/* ============================ ORCHESTRATION ============================ */
+async function run() {
+  const btn = $("refresh");
+  btn.disabled = true; clearBanner();
+
+  const now = etNow();
+  const today = new Date(now); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+
+  const moon = moonInfo(new Date()); // moon phase for right now
+
+  // fetch in parallel; each may fail independently
+  const [tideRes, waveRes, windRes] = await Promise.allSettled([
+    getTides(today, tomorrow),
+    getWaves(today, tomorrow),
+    getWind(today, tomorrow),
+  ]);
+
+  // tides
+  let high = null, tideOk = true;
+  if (tideRes.status === "fulfilled") {
+    const highs = tideRes.value.filter((p) => p.type === "H" && p.h >= 18 && p.h <= 27);
+    if (highs.length) {
+      highs.sort((a,b) => Math.abs(a.h - 22.5) - Math.abs(b.h - 22.5));
+      high = highs[0];
+    }
+  } else { tideOk = false; }
+
+  // seas
+  const waveM = waveRes.status === "fulfilled" ? sessionMax(waveRes.value, today, tomorrow) : null;
+  const windKn = windRes.status === "fulfilled" ? sessionMax(windRes.value, today, tomorrow) : null;
+  const seasOk = waveRes.status === "fulfilled" || windRes.status === "fulfilled";
+
+  const m = rateMoon(moon.illum);
+  const t = tideOk ? rateTide(high) : 0;
+  const s = rateSeas(waveM, windKn);
+
+  render({
+    moon, m,
+    tide: { high }, t,
+    seas: { waveM, windKn }, s,
+    updated: prettyTime(now),
+    tonightLabel: prettyDate(now),
+  });
+
+  // surface any partial failures honestly
+  const problems = [];
+  if (!tideOk) problems.push("tide predictions");
+  if (!seasOk) problems.push("sea state");
+  if (problems.length) banner(`Couldn’t reach ${problems.join(" and ")} — showing what loaded. Try again in a moment.`, true);
+
+  btn.disabled = false;
+}
+
+$("refresh").addEventListener("click", run);
+run().catch((e) => {
+  console.error(e);
+  banner("Couldn’t load conditions. Check your connection and try again.", true);
+  $("verdict").innerHTML = `—<small>no data</small>`;
+  $("refresh").disabled = false;
+});
+</script>
+</body>
+</html>
