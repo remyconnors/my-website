@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links — Remy Connors</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header" data-page="links"></header>
+
+    <main>
+      <h1>Links</h1>
+      <p class="tagline">Find me elsewhere</p>
+
+      <p>Here are some other things I've been up to!</p>
+
+      <!-- Each entry is one <li><a class="link-card"> … </a></li>.
+           Copy a block to add a link. To open links in a new tab, add
+           target="_blank" rel="noopener" to the <a>. -->
+      <ul class="link-list">
+
+        <li>
+          <a class="link-card" href="blog.html">
+            <span class="link-title">Writing<span class="arrow">→</span></span>
+            <span class="link-host">remyconnors.neocities.org/blog</span>
+            <span class="link-desc">Essays and notes on various trips and projects — updated semi-regularly.</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="link-card" href="https://flickr.com/photos/sarahconnors/albums">
+            <span class="link-title">Photography<span class="arrow">→</span></span>
+            <span class="link-host">flickr - remy_connors</span>
+            <span class="link-desc">Motorsport, hockey, and travel photography from the 2010s.</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="link-card" href="https://bsky.app/profile/USERNAME">
+            <span class="link-title">Bluesky <span class="arrow">→</span></span>
+            <span class="link-host">remy.gay</span>
+            <span class="link-desc">Shorter thoughts & life updates.</span>
+          </a>
+        </li>
+
+        <li>
+          <a class="link-card" href="mailto:remygryph@gmail.com">
+            <span class="link-title">Email <span class="arrow">→</span></span>
+            <span class="link-host">remygryph@gmail.com</span>
+            <span class="link-desc">The best way to reach me directly!</span>
+          </a>
+        </li>
+         <li>
+          <a class="link-card" href="http://wyld.boston">
+            <span class="link-title">WYLD <span class="arrow">→</span></span>
+            <span class="link-host">wyld.boston</span>
+            <span class="link-desc">Monthly furry party I run at Jacques Cabaret!</span>
+          </a>
+        </li>
+          <li>
+          <a class="link-card" href="http://somervillefurs.com">
+            <span class="link-title">Somerville Furs Calendar <span class="arrow">→</span></span>
+            <span class="link-host">somervillefurs.com</span>
+            <span class="link-desc">Info on furry events around Somerville, including our monthly Aeronaut meet!</span>
+          </a>
+        </li>
+         <li>
+          <a class="link-card" href="https://github.com/remyconnors">
+            <span class="link-title">GitHub <span class="arrow">→</span></span>
+            <span class="link-host">github.com/remyconnors</span>
+            <span class="link-desc">Open-source projects I'm working/have worked on.</span>
+          </a>
+        </li>
+          <li>
+          <a class="link-card" href="https://www.stanleycupofchowder.com/authors/remy-connors/archives/2">
+            <span class="link-title">SB Nation <span class="arrow">→</span></span>
+            <span class="link-host">stanleycupofchowder.com/authors/remy-connors/archives/</span>
+            <span class="link-desc">An archive of the sportswriting I did while writer/editor of Stanley Cup of Chowder (2011-2017).</span>
+          </a>
+        </li>
+        
+        
+        
+      </ul>
+    </main>
+
+    <footer class="site-footer">
+      © <span id="year"></span> Remy Connors ·
+      <a href="index.html">Home</a>
+    </footer>
+  </div>
+
+  <script src="site.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
