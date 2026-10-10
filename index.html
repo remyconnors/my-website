@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remy Connors</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <!-- nav.html is injected here by site.js; data-page marks the active link -->
+    <header class="site-header" data-page="home"></header>
+
+    <main>
+      <p class="tagline">Writer · Data Engineer · Motorsport Enthusiast</p>
+
+      <!-- Rotating hero. Add as many <img> as you like; the first one carries
+           class="is-active". To get a direct URL: open a photo on Flickr,
+           choose a size (Download ▾ or the "…" menu), and copy the
+           live.staticflickr.com/... link. Suffixes control size:
+           _z = 640px (good default), _c = 800px, _b = 1024px. -->
+      <div class="hero-photo" aria-hidden="true">
+        <img class="is-active"
+             src="https://live.staticflickr.com/4314/35871945991_008a322e24_z.jpg"
+             alt="">
+        <!-- <img src="https://live.staticflickr.com/SERVER/PHOTO_SECRET_z.jpg" alt=""> -->
+        <!-- <img src="https://live.staticflickr.com/SERVER/PHOTO_SECRET_z.jpg" alt=""> -->
+      </div>
+
+      <h2>Recent writing</h2>
+      <ul class="post-list">
+        <li>
+          <time datetime="2026-01-15">Jan 2026</time>
+          <a href="blog.html">Your first post title</a>
+        </li>
+      </ul>
+      <p><a href="blog.html">All writing →</a></p>
+    </main>
+
+    <footer class="site-footer">
+      © <span id="year"></span> Remy Connors ·
+      <a href="https://github.com/">GitHub</a>
+    </footer>
+  </div>
+
+  <script src="site.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Crossfade the hero photos. No-op with one image; skipped for
+    // reduced-motion users (they just see the first).
+    (function () {
+      var imgs = document.querySelectorAll(".hero-photo img");
+      if (imgs.length < 2) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var i = 0;
+      setInterval(function () {
+        imgs[i].classList.remove("is-active");
+        i = (i + 1) % imgs.length;
+        imgs[i].classList.add("is-active");
+      }, 6000);
+    })();
+  </script>
+</body>
+</html>
