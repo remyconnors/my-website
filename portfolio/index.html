@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remy Connors, data engineer</title>
+<meta name="description" content="Selected data engineering work by Remy Connors: marketing data pipelines, data standards, and cloud platform architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eef0eb;
+    --ink: #17212b;
+    --soft: #56616b;
+    --rule: #cfd4cc;
+    --cobalt: #2741c4;
+    --amber: #e9b10f;
+    --node-bg: #f7f8f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0f1b2d;
+      --ink: #e6ebf1;
+      --soft: #9aa8b8;
+      --rule: #2a3a52;
+      --cobalt: #8098ff;
+      --amber: #f2c94c;
+      --node-bg: #15243a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    font-variation-settings: "wdth" 100;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--cobalt); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 2px; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+  .cond { font-stretch: 75%; font-variation-settings: "wdth" 75; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    min-height: 560px;
+    align-items: center;
+    padding: 56px 0 48px;
+  }
+  .hero svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .hero .src { font-size: 13.5px; fill: var(--soft); font-variation-settings: "wdth" 75; }
+  .hero path { fill: none; stroke: var(--cobalt); stroke-width: 1.25; opacity: .6; }
+  .hero path.faint { stroke-width: 1; opacity: .22; }
+  .hero .dot { fill: var(--cobalt); }
+  .hero path.main { stroke: var(--amber); stroke-width: 3; opacity: 1; }
+  .hero-text { grid-column: 2; position: relative; padding-left: 28px; }
+  h1 {
+    margin: 0 0 22px;
+    font-size: clamp(46px, 8.2vw, 104px);
+    line-height: .92;
+    font-weight: 800;
+    font-variation-settings: "wdth" 125;
+    letter-spacing: -0.035em;
+  }
+  .lede { font-size: 20px; line-height: 1.5; max-width: 30em; margin: 0 0 26px; }
+  .lede strong { font-weight: 700; }
+  .contact { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 16px; }
+  .contact a { font-weight: 600; }
+
+  /* Index */
+  .index {
+    border-top: 2px solid var(--ink);
+    padding: 14px 0 0;
+    display: flex; flex-wrap: wrap; gap: 4px 28px;
+    font-variation-settings: "wdth" 75; font-size: 16px;
+  }
+  .index a { color: var(--ink); text-decoration: none; }
+  .index a:hover { color: var(--cobalt); }
+
+  /* Case studies */
+  .case {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 0 48px;
+    padding: 72px 0 64px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .spec { font-variation-settings: "wdth" 75; font-size: 15.5px; line-height: 1.45; color: var(--soft); padding-top: 10px; }
+  .spec p { margin: 0 0 14px; }
+  .spec .org { color: var(--ink); font-weight: 650; font-size: 17px; }
+  .story { max-width: 700px; }
+  h2 {
+    margin: 0 0 20px;
+    font-size: clamp(28px, 3.6vw, 40px);
+    line-height: 1.06;
+    font-weight: 750;
+    font-variation-settings: "wdth" 118;
+    letter-spacing: -0.02em;
+  }
+  .story p { margin: 0 0 14px; }
+  .story ul { margin: 0 0 18px; padding: 0; list-style: none; }
+  .story li { position: relative; padding-left: 22px; margin-bottom: 9px; }
+  .story li::before {
+    content: ""; position: absolute; left: 2px; top: .72em;
+    width: 10px; height: 2px; background: var(--cobalt);
+  }
+  .outcome {
+    margin: 26px 0 0;
+    font-size: 21px; line-height: 1.4; font-weight: 600;
+    font-variation-settings: "wdth" 110;
+    padding-left: 18px; border-left: 3px solid var(--amber);
+  }
+
+  /* Lineage diagrams */
+  .lineage {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0 54px;
+    margin: 30px 0 10px;
+    padding: 50px 0 8px;
+    border-top: 1px solid var(--rule);
+  }
+  .lineage svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .lineage path { fill: none; stroke: var(--cobalt); stroke-width: 1.25; opacity: .55; }
+  .lineage .ah { stroke-width: 1.4; opacity: 1; stroke-linecap: round; stroke-linejoin: round; }
+  .lineage .junction { fill: var(--cobalt); }
+  .col { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 8px; z-index: 1; }
+  .lineage .col-name { position: absolute; top: -30px; left: 0; margin: 0; font-size: 13.5px; font-style: italic; color: var(--soft); font-variation-settings: "wdth" 75; }
+  .n {
+    display: block;
+    padding: 6px 10px;
+    font-size: 14.5px; line-height: 1.3;
+    font-variation-settings: "wdth" 88;
+    background: var(--node-bg);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+  .n.key { background: var(--cobalt); border-color: var(--cobalt); color: var(--paper); font-weight: 600; }
+  .n.old { color: var(--soft); text-decoration: line-through; text-decoration-color: var(--soft); background: transparent; border-style: dashed; }
+  .n small { display: block; font-size: 12.5px; color: var(--soft); font-variation-settings: "wdth" 75; margin-top: 1px; }
+  .n.key small { color: inherit; opacity: .8; }
+  @media (min-width: 761px) {
+    .lineage.wide { margin-left: -268px; width: calc(100% + 268px); gap: 0 46px; }
+    .specimen.wide, .rollout.wide { margin-left: -268px; width: calc(100% + 268px); }
+  }
+  .group { display: flex; flex-direction: column; gap: 18px; padding: 10px 10px 12px; border: 1.5px solid var(--cobalt); border-radius: 5px; }
+  .story .group-name { margin: 0 0 -6px; font-size: 14.5px; font-weight: 700; color: var(--cobalt); font-variation-settings: "wdth" 88; line-height: 1.25; }
+  .group-name small { display: block; font-weight: 400; font-size: 12.5px; color: var(--soft); font-variation-settings: "wdth" 75; }
+  /* Naming specimen */
+  .specimen { position: relative; display: grid; grid-template-columns: minmax(0, 250px) 96px minmax(0, 1fr);
+    margin: 30px 0 10px; padding: 22px 0 8px; border-top: 1px solid var(--rule); }
+  .specimen code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 14px; }
+  .sp-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .sp-lines path { fill: none; stroke: var(--cobalt); stroke-width: 1.25; opacity: .55; }
+  .sp-lines .ah { stroke-width: 1.4; opacity: 1; stroke-linecap: round; stroke-linejoin: round; }
+  .specimen .sp-cap { margin: 0 0 10px; font-size: 13.5px; font-style: italic; color: var(--soft); font-variation-settings: "wdth" 75; }
+  .sp-before { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .raw { display: block; padding: 6px 10px; color: var(--soft); background: transparent;
+    border: 1px dashed var(--rule); border-radius: 3px; text-decoration: line-through; text-decoration-color: var(--soft); }
+  .sp-after { position: relative; z-index: 1; align-self: start; }
+  .tokens { display: flex; flex-wrap: wrap; align-items: flex-start; margin: 0 0 26px; }
+  .tok { display: flex; flex-direction: column; align-items: center; }
+  .tok code { display: block; padding: 7px 9px; background: var(--cobalt); color: var(--paper); border-radius: 3px; font-weight: 600; font-size: 15px; }
+  .tok small { margin-top: 5px; font-size: 12.5px; color: var(--soft); font-variation-settings: "wdth" 75; }
+  .sep { padding: 7px 2px; font-family: ui-monospace, Menlo, monospace; font-size: 15px; color: var(--soft); }
+  .utm { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; align-items: baseline; }
+  .utm dt { font-family: ui-monospace, Menlo, monospace; font-size: 14px; line-height: 1.5; color: var(--soft); }
+  .utm dd code { line-height: 1.5; }
+  .utm dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .utm dd code { color: var(--cobalt); font-weight: 600; }
+  /* Regional rollout */
+  .rollout { position: relative; margin: 30px 0 10px; padding: 22px 0 8px; border-top: 1px solid var(--rule); }
+  .ro-legend { list-style: none; margin: 0 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px;
+    font-size: 14px; font-variation-settings: "wdth" 88; }
+  .story .ro-legend li { padding: 0; margin: 0; display: flex; align-items: center; gap: 7px; }
+  .story .ro-legend li::before { content: none; }
+  .sw { display: inline-block; width: 18px; height: 10px; border-radius: 2px; }
+  .s1 { background: color-mix(in srgb, var(--cobalt) 30%, var(--paper)); }
+  .s2 { background: color-mix(in srgb, var(--cobalt) 55%, var(--paper)); }
+  .s3 { background: var(--cobalt); }
+  .s4 { background: var(--amber); }
+  .ro-body { display: grid; grid-template-columns: minmax(0, 1fr) 90px 250px; align-items: center; }
+  .ro-rows { display: flex; flex-direction: column; gap: 7px; position: relative; z-index: 1; }
+  .ro-row { display: grid; grid-template-columns: 74px 1fr; align-items: center; }
+  .ro-label { font-size: 13.5px; color: var(--soft); font-variation-settings: "wdth" 75; }
+  .ro-track { position: relative; height: 16px; }
+  .seg { position: absolute; top: 0; bottom: 0; border-radius: 2px; border-right: 2px solid var(--paper); }
+  .ro-target { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+  .ro-target .group { gap: 8px; }
+  .ro-target .group-name { margin: 0 0 2px; }
+  .ro-old { font-size: 13.5px; }
+  .fig-note { font-size: 14px; color: var(--soft); margin: 4px 0 0; font-variation-settings: "wdth" 75; }
+
+  /* Approach */
+  .approach { padding: 72px 0 40px; display: grid; grid-template-columns: 220px 1fr; gap: 0 48px; }
+  .approach dl { margin: 0; max-width: 700px; }
+  .approach dt { font-weight: 700; font-size: 19px; font-variation-settings: "wdth" 110; margin-top: 18px; }
+  .approach dt:first-child { margin-top: 0; }
+  .approach dd { margin: 4px 0 0; }
+  .approach .kit { display: grid; grid-template-columns: 140px 1fr; gap: 8px 20px; margin: 52px 0 0; padding-top: 24px; border-top: 1px solid var(--rule); max-width: 700px; }
+  .kit dt { font-weight: 650; font-variation-settings: "wdth" 75; font-size: 16px; margin: 0; }
+  .kit dd { margin: 0; color: var(--soft); }
+
+  footer {
+    border-top: 2px solid var(--ink);
+    margin-top: 40px;
+    padding: 22px 0 64px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 32px;
+    font-size: 15.5px;
+  }
+  footer p { margin: 0; }
+  footer .note { color: var(--soft); font-variation-settings: "wdth" 75; }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 0 18px; }
+    .hero { grid-template-columns: 1fr; min-height: 0; padding: 0 0 40px; }
+    .hero-text { grid-column: 1; padding: 190px 0 0; }
+    .case, .approach { grid-template-columns: 1fr; padding: 52px 0 44px; }
+    .spec { padding: 0 0 6px; display: flex; flex-wrap: wrap; gap: 0 18px; }
+    .spec p { margin: 0 0 4px; }
+    .lineage { grid-auto-flow: row; grid-auto-columns: auto; gap: 34px 0; padding-top: 22px; }
+    .lineage .col-name { position: static; margin-bottom: 2px; }
+    .specimen { grid-template-columns: 1fr; }
+    .ro-body { grid-template-columns: 1fr; }
+    .ro-row { grid-template-columns: 64px 1fr; }
+    .ro-gap { height: 34px; }
+    .sp-gap { height: 34px; }
+    .sp-after { align-self: start; }
+    .approach .kit { grid-template-columns: 1fr; gap: 0; }
+    .kit dd { margin-bottom: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero path { animation: none !important; stroke-dashoffset: 0 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero" id="top">
+    <svg id="hero-lines" aria-hidden="true"></svg>
+    <div class="hero-text">
+      <h1>Remy Connors</h1>
+      <p class="lede">I'm a data engineer who turns messy marketing data into reporting people can trust.
+        I've built <strong>~250 production pipelines</strong>, cut client reporting from
+        <strong>seven days to 48 hours</strong>, and written the standards that keep the data clean.</p>
+      <div class="contact">
+        <a href="Remy_Connors_Resume.pdf">Resume (PDF)</a>
+        <a href="https://www.linkedin.com/in/remyconnors">LinkedIn</a>
+        <a href="mailto:remygryph@gmail.com">remygryph@gmail.com</a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="index" aria-label="Case studies">
+    <a href="#automation">Reporting automation</a>
+    <a href="#standards">Data standards</a>
+    <a href="#azure">Azure convergence</a>
+    <a href="#crosschannel">Cross-channel model</a>
+    <a href="#approach">How I work</a>
+  </nav>
+
+  <main>
+    <article class="case" id="automation">
+      <div class="spec">
+        <p class="org">Team LEWIS</p>
+        <p>Lead Data Engineer<br>2023 to 2026</p>
+        <p>Funnel.io, Zuarbase, PostgreSQL, dbt, Python, GitHub, Tableau, Looker Studio</p>
+      </div>
+      <div class="story">
+        <h2>From manual spreadsheets to automated reporting</h2>
+        <p>Client dashboards for the agency's US digital clients were updated by hand in Google Sheets. Each
+          reporting cycle meant copying platform exports, reconciling numbers by eye, and waiting about a week
+          for results. The process was error-prone and didn't scale as clients and channels grew.</p>
+
+        <div class="lineage wide" role="img" aria-label="Ten source types, including paid search, paid social, programmatic, organic search and social, GA4 web data, Salesforce CRM data, Amazon and Shopify sales data, budget data and custom client sources, each flow into Funnel.io. Funnel.io merges the data by type and sends it to a Zuarbase PostgreSQL database, where models feed cross-channel views and reconciliation checks confirm their accuracy. The views feed dashboards and weekly reports.">
+          <div class="col">
+            <p class="col-name">Sources</p>
+            <span class="n" data-to="a-funnel">Paid search<small>Google Ads, Bing Ads</small></span>
+            <span class="n" data-to="a-funnel">Paid social<small>LinkedIn Ads, Meta Ads, and more</small></span>
+            <span class="n" data-to="a-funnel">Programmatic<small>StackAdapt</small></span>
+            <span class="n" data-to="a-funnel">Organic search</span>
+            <span class="n" data-to="a-funnel">Organic social</span>
+            <span class="n" data-to="a-funnel">Web data<small>GA4</small></span>
+            <span class="n" data-to="a-funnel">CRM data<small>Salesforce</small></span>
+            <span class="n" data-to="a-funnel">Sales data<small>Amazon, Shopify</small></span>
+            <span class="n" data-to="a-funnel">Budget data</span>
+            <span class="n" data-to="a-funnel">Custom client sources</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Ingestion</p>
+            <span class="n key" id="a-funnel" data-to="t1,t2,t3,t4,t5,t6,t7,t8,t9,t10">Funnel.io</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Merged by data type</p>
+            <span class="n" id="t1" data-to="a-zb">Paid search</span>
+            <span class="n" id="t2" data-to="a-zb">Paid social</span>
+            <span class="n" id="t3" data-to="a-zb">Programmatic</span>
+            <span class="n" id="t4" data-to="a-zb">Organic search</span>
+            <span class="n" id="t5" data-to="a-zb">Organic social</span>
+            <span class="n" id="t6" data-to="a-zb">Web data</span>
+            <span class="n" id="t7" data-to="a-zb">CRM data</span>
+            <span class="n" id="t8" data-to="a-zb">Sales data</span>
+            <span class="n" id="t10" data-to="a-zb">Budget data</span>
+            <span class="n" id="t9" data-to="a-zb">Custom data</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Warehouse</p>
+            <div class="group" id="a-zb">
+              <p class="group-name">Zuarbase<small>PostgreSQL database</small></p>
+              <span class="n" id="a-models" data-v="a-views">Models<small>feed the views</small></span>
+              <span class="n key" id="a-views" data-to="a-dash,a-weekly">Cross-channel views</span>
+              <span class="n" id="a-checks" data-v="a-views">Reconciliation checks<small>confirm the views are accurate</small></span>
+            </div>
+          </div>
+          <div class="col">
+            <p class="col-name">Delivery</p>
+            <span class="n" id="a-dash">10 dashboards</span>
+            <span class="n" id="a-weekly">Weekly reports</span>
+          </div>
+        </div>
+        <p class="fig-note">Simplified redraw. Client names and internal details withheld.</p>
+
+        <ul>
+          <li>Redesigned the database structure and replaced every manual Sheets workflow with automated pipelines.</li>
+          <li>Routed every source through Funnel.io, merged the data by type, and loaded it into a Zuarbase
+            PostgreSQL database where cross-channel views feed every dashboard and report.</li>
+          <li>Modeled paid media performance for B2B clients, such as LinkedIn spend joined to leads and pipeline,
+            demand-gen splits, and fiscal-quarter rollups, and solved blending problems between monthly and daily sources.</li>
+          <li>Moved all pipeline code into a version-controlled GitHub codebase and documented every pipeline.</li>
+          <li>Wrote reconciliation checks that confirm the cross-channel views are accurate before they reach reporting.</li>
+        </ul>
+        <p class="outcome">Reporting turnaround went from about 7 days to 48 hours, with ~40 hours a month of
+          manual entry gone. Roughly 250 pipelines now feed 10 dashboards for five enterprise clients.</p>
+      </div>
+    </article>
+
+    <article class="case" id="standards">
+      <div class="spec">
+        <p class="org">Team LEWIS</p>
+        <p>Lead Data Engineer<br>2023 to 2026</p>
+        <p>Data governance, naming and UTM taxonomy, GA4, Google Tag Manager, team training</p>
+      </div>
+      <div class="story">
+        <h2>Data standards that made AI reporting trustworthy</h2>
+        <p>Every account team named campaigns its own way and built UTMs by hand. The same channel could show
+          up under different names, attribution broke whenever tags were missing, and analysts spent hours
+          cleaning data before anyone could trust a number. Putting automated or AI-generated reporting on
+          top of that was risky.</p>
+
+        <figure class="specimen wide" role="img" aria-label="Illustrative example. Before: one LinkedIn lead-gen campaign appears under five different hand-typed names. After: a single name built from the taxonomy, us_linkedin_paid-social_lead-gen_2026q3, made of region, platform, channel, objective and period segments, and the same values fill the utm_source, utm_medium and utm_campaign tags.">
+          <svg class="sp-lines" aria-hidden="true"></svg>
+          <div class="sp-before">
+            <p class="sp-cap">Before: one campaign, five names</p>
+            <code class="raw">LinkedIn - Q3 Lead Gen</code>
+            <code class="raw">li_q3_leadgen</code>
+            <code class="raw">Q3 LeadGen LI (copy)</code>
+            <code class="raw">linkedin q3 leads US</code>
+            <code class="raw">LI-LeadGen-Q3-v2</code>
+          </div>
+          <div class="sp-gap"></div>
+          <div class="sp-after">
+            <p class="sp-cap">After: one name, built from the taxonomy</p>
+            <div class="tokens">
+              <span class="tok"><code>us</code><small>region</small></span><span class="sep">_</span><span class="tok"><code>linkedin</code><small>platform</small></span><span class="sep">_</span><span class="tok"><code>paid-social</code><small>channel</small></span><span class="sep">_</span><span class="tok"><code>lead-gen</code><small>objective</small></span><span class="sep">_</span><span class="tok"><code>2026q3</code><small>period</small></span>
+            </div>
+            <p class="sp-cap">The same values fill the UTMs</p>
+            <dl class="utm">
+              <dt>utm_source</dt><dd><code>linkedin</code></dd>
+              <dt>utm_medium</dt><dd><code>paid-social</code></dd>
+              <dt>utm_campaign</dt><dd><code>us_linkedin_paid-social_lead-gen_2026q3</code></dd>
+            </dl>
+          </div>
+        </figure>
+        <p class="fig-note">Illustrative example with made-up values. Real client conventions withheld.</p>
+
+        <ul>
+          <li>Wrote the standards for paid media naming conventions, UTMs, and data inputs, and worked with
+            account teams across regions to adopt them.</li>
+          <li>Trained colleagues on why the rules exist and how they flow through to reporting, so the standards
+            held up without me policing them.</li>
+          <li>Investigated attribution gaps between tagged and untagged traffic and set up consent-aware tracking
+            (GTM, GA4, Cookiebot) on client sites.</li>
+        </ul>
+        <p class="outcome">Errors get caught at the source instead of downstream. That foundation let the company
+          adopt agentic AI reporting tools with confidence in what the agents produce.</p>
+      </div>
+    </article>
+
+    <article class="case" id="azure">
+      <div class="spec">
+        <p class="org">Team LEWIS</p>
+        <p>Architecture and migration plan<br>2026</p>
+        <p>Funnel.io, Azure Data Factory, Microsoft Fabric, Angular.js, D3.js, currency-conversion API, migration planning</p>
+      </div>
+      <div class="story">
+        <h2>Bringing ten regional stacks onto one platform</h2>
+        <p>Ten regions each ran their own data stack, with their own mix of BI and pipeline tools. Every
+          region paid for tools the others also paid for, reporting looked different everywhere, and because
+          regions reported in different currencies, global numbers couldn't simply be summed.</p>
+
+        <figure class="rollout wide" role="img" aria-label="Illustrative rollout plan. Ten regions move onto the shared stack one after another. For each region the steps are: migrate historical data, map campaign names and UTMs to our standards, onboard the team to Funnel.io self-service ingestion, and make outputs available to the team. Every region ends on one shared stack: Funnel.io, Azure Data Factory and Fabric, outputs for each team, a client reporting portal built with Angular.js and D3.js, and supplementary AI tools, replacing separate BI and pipeline tools in each region.">
+          <svg class="sp-lines" aria-hidden="true"></svg>
+          <ul class="ro-legend"><li><i class="sw s1"></i>Migrate historical data</li><li><i class="sw s2"></i>Map campaign names and UTMs to our standards</li><li><i class="sw s3"></i>Onboard the team to Funnel.io self-service ingestion</li><li><i class="sw s4"></i>Outputs available to the team</li></ul>
+          <div class="ro-body">
+            <div class="ro-rows">
+              <div class="ro-row"><span class="ro-label">Region 1</span><div class="ro-track"><i class="seg s1" style="left:0.000%;width:9.302%"></i><i class="seg s2" style="left:9.302%;width:9.302%"></i><i class="seg s3" style="left:18.605%;width:9.302%"></i><i class="seg s4" style="left:27.907%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 2</span><div class="ro-track"><i class="seg s1" style="left:6.977%;width:9.302%"></i><i class="seg s2" style="left:16.279%;width:9.302%"></i><i class="seg s3" style="left:25.581%;width:9.302%"></i><i class="seg s4" style="left:34.884%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 3</span><div class="ro-track"><i class="seg s1" style="left:13.953%;width:9.302%"></i><i class="seg s2" style="left:23.256%;width:9.302%"></i><i class="seg s3" style="left:32.558%;width:9.302%"></i><i class="seg s4" style="left:41.860%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 4</span><div class="ro-track"><i class="seg s1" style="left:20.930%;width:9.302%"></i><i class="seg s2" style="left:30.233%;width:9.302%"></i><i class="seg s3" style="left:39.535%;width:9.302%"></i><i class="seg s4" style="left:48.837%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 5</span><div class="ro-track"><i class="seg s1" style="left:27.907%;width:9.302%"></i><i class="seg s2" style="left:37.209%;width:9.302%"></i><i class="seg s3" style="left:46.512%;width:9.302%"></i><i class="seg s4" style="left:55.814%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 6</span><div class="ro-track"><i class="seg s1" style="left:34.884%;width:9.302%"></i><i class="seg s2" style="left:44.186%;width:9.302%"></i><i class="seg s3" style="left:53.488%;width:9.302%"></i><i class="seg s4" style="left:62.791%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 7</span><div class="ro-track"><i class="seg s1" style="left:41.860%;width:9.302%"></i><i class="seg s2" style="left:51.163%;width:9.302%"></i><i class="seg s3" style="left:60.465%;width:9.302%"></i><i class="seg s4" style="left:69.767%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 8</span><div class="ro-track"><i class="seg s1" style="left:48.837%;width:9.302%"></i><i class="seg s2" style="left:58.140%;width:9.302%"></i><i class="seg s3" style="left:67.442%;width:9.302%"></i><i class="seg s4" style="left:76.744%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 9</span><div class="ro-track"><i class="seg s1" style="left:55.814%;width:9.302%"></i><i class="seg s2" style="left:65.116%;width:9.302%"></i><i class="seg s3" style="left:74.419%;width:9.302%"></i><i class="seg s4" style="left:83.721%;width:9.302%"></i></div></div>
+              <div class="ro-row"><span class="ro-label">Region 10</span><div class="ro-track"><i class="seg s1" style="left:62.791%;width:9.302%"></i><i class="seg s2" style="left:72.093%;width:9.302%"></i><i class="seg s3" style="left:81.395%;width:9.302%"></i><i class="seg s4" style="left:90.698%;width:9.302%"></i></div></div>
+            </div>
+            <div class="ro-gap"></div>
+            <div class="ro-target">
+              <div class="group">
+                <p class="group-name">One shared stack<small>for every region</small></p>
+                <span class="n key">Funnel.io<small>self-service ingestion</small></span>
+                <span class="n key">Azure Data Factory and Fabric</span>
+                <span class="n">Outputs ready for each team</span>
+                <span class="n">Client reporting portal<small>Angular.js, D3.js</small></span>
+                <span class="n">Supplementary AI tools</span>
+              </div>
+              <span class="n old ro-old">A separate set of BI and pipeline tools in each region</span>
+            </div>
+          </div>
+        </figure>
+        <p class="fig-note">Illustrative sequence. Region names and dates withheld.</p>
+
+        <ul>
+          <li>Built the business case and a phased plan to move all ten regions onto one platform: Funnel.io for
+            ingestion and Azure (Data Factory, Fabric) for storage and outputs.</li>
+          <li>Worked region by region and client by client: migrate historical data, map legacy campaign names
+            and UTMs to our standards, train client teams on Funnel.io's self-service ingestion, and make
+            outputs readily available to each team.</li>
+          <li>Connected a currency-conversion API to the pipeline, so figures from every region convert to a single
+            currency and can be summed for global reporting.</li>
+          <li>Planned a protected window for legacy clients, so live reporting keeps running through the cutover.</li>
+          <li>Presented the strategy to leadership and wrote supporting materials for internal communication.</li>
+        </ul>
+        <p class="outcome">Cutting the number of BI and pipeline tools in use and standardizing across regions not
+          only saves dozens of hours of manual work each reporting cycle and thousands of dollars in tool costs, but
+          also enables us to create more useful and in-depth reporting for global leadership.</p>
+      </div>
+    </article>
+
+    <article class="case" id="crosschannel">
+      <div class="spec">
+        <p class="org">Havas Media Group</p>
+        <p>Senior Data Engineer<br>2012 to 2023</p>
+        <p>SQL, Amazon S3, Redshift, PostgreSQL, Snowflake, Funnel.io, Tableau</p>
+      </div>
+      <div class="story">
+        <h2>One cross-channel model for global brands</h2>
+        <p>Large brands bought media across many channels, each with its own platform, metrics, and export
+          format. Stakeholders in different regions needed one consistent view of paid and organic performance,
+          on a regular schedule.</p>
+
+        <div class="lineage wide" role="img" aria-label="Nine source types, including paid search, paid social, programmatic, organic search and social, Google Analytics web data, Amazon and Shopify sales data, budget data and custom client sources, each flow into Funnel.io for ingestion, are staged in Amazon S3, and load into a data warehouse where Redshift (PostgreSQL) and Snowflake feed cross-channel views. The views feed Tableau dashboards and recurring global reporting.">
+          <div class="col">
+            <p class="col-name">Sources</p>
+            <span class="n" data-to="h-funnel">Paid search<small>Google Ads, Bing Ads</small></span>
+            <span class="n" data-to="h-funnel">Paid social<small>LinkedIn Ads, Meta Ads, and more</small></span>
+            <span class="n" data-to="h-funnel">Programmatic</span>
+            <span class="n" data-to="h-funnel">Organic search</span>
+            <span class="n" data-to="h-funnel">Organic social</span>
+            <span class="n" data-to="h-funnel">Web data<small>Google Analytics</small></span>
+            <span class="n" data-to="h-funnel">Sales data<small>Amazon, Shopify</small></span>
+            <span class="n" data-to="h-funnel">Budget data</span>
+            <span class="n" data-to="h-funnel">Custom client sources</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Ingest</p>
+            <span class="n key" id="h-funnel" data-to="h-s3">Funnel.io</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Stage</p>
+            <span class="n key" id="h-s3" data-to="h-wh">Amazon S3</span>
+          </div>
+          <div class="col">
+            <p class="col-name">Model</p>
+            <div class="group" id="h-wh">
+              <p class="group-name">Data warehouse</p>
+              <span class="n" data-v="h-model">Redshift (PostgreSQL)</span>
+              <span class="n key" id="h-model" data-to="h-tab,h-global">Cross-channel views</span>
+              <span class="n" data-v="h-model">Snowflake</span>
+            </div>
+          </div>
+          <div class="col">
+            <p class="col-name">Report</p>
+            <span class="n" id="h-tab">Tableau dashboards</span>
+            <span class="n" id="h-global">Recurring global reporting</span>
+          </div>
+        </div>
+        <p class="fig-note">Simplified redraw. Client names and internal details withheld.</p>
+
+        <ul>
+          <li>Built SQL pipelines combining paid media, organic social, organic search, and custom sources into a
+            single cross-channel reporting model.</li>
+          <li>Ingested every source through Funnel.io, staged the raw data in Amazon S3, and created processes to
+            load it into Redshift as aggregated daily data by source. From there, cross-channel views feed our
+            dashboards and reporting.</li>
+          <li>Owned documentation and training for the Data Engineering team, which standardized how pipelines
+            were built and sped up onboarding.</li>
+          <li>Ran the team's JIRA help desk, triaging and resolving client data requests on deadline.</li>
+        </ul>
+        <p class="outcome">Seven enterprise clients in travel, finance, automotive, and luxury retail got regular
+          reporting for stakeholders around the world.</p>
+      </div>
+    </article>
+
+    <section class="approach" id="approach">
+      <div class="spec">
+        <p class="org">How I work</p>
+      </div>
+      <div>
+        <dl>
+          <dt>Fix it at the source.</dt>
+          <dd>Standards for naming, taxonomy, and inputs stop bad data before it ever reaches a dashboard.</dd>
+          <dt>Treat pipelines as software.</dt>
+          <dd>Version control, documentation for every pipeline, and validation before anything ships.</dd>
+          <dt>Teach the system.</dt>
+          <dd>I explain how the stack works so teams can own it, and the platform doesn't depend on one person.</dd>
+        </dl>
+        <dl class="kit">
+          <dt>Languages</dt><dd>SQL, Python, JavaScript, Google Apps Script</dd>
+          <dt>Warehouses</dt><dd>PostgreSQL, BigQuery, Snowflake, Redshift</dd>
+          <dt>Cloud</dt><dd>Azure (Data Factory, Fabric), AWS (S3, Redshift), Google Cloud (BigQuery)</dd>
+          <dt>Pipelines</dt><dd>dbt, Funnel.io, Zuarbase, API ingestion, Git and GitHub</dd>
+          <dt>BI and tracking</dt><dd>Tableau, Looker Studio, GA4, Google Tag Manager</dd>
+        </dl>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Remy Connors, Somerville, MA. Open to remote.
+      <a href="mailto:remygryph@gmail.com">remygryph@gmail.com</a></p>
+    <p class="note">Client work is anonymized. Diagrams are simplified redraws, not screenshots of internal systems.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var NS = "http://www.w3.org/2000/svg";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function el(name, attrs) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  // Deterministic pseudo-random so the hero looks the same on every load
+  var seed = 7;
+  function rand() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+
+  var sources = ["Paid search", "Paid social", "Programmatic", "Organic search", "Organic social",
+                 "Web data", "CRM data", "Sales data", "Budget data", "Custom sources"];
+
+  function drawHero() {
+    var svg = document.getElementById("hero-lines");
+    var hero = svg.parentNode;
+    var title = hero.querySelector("h1");
+    svg.innerHTML = "";
+    seed = 7;
+    var hb = hero.getBoundingClientRect();
+    var tb = title.getBoundingClientRect();
+    var w = hb.width, h = hb.height;
+    var mobile = window.innerWidth <= 760;
+    var tx, ty, paths = [];
+
+    if (!mobile) {
+      // A tidy fan: one labeled line per source, all starting on the same edge,
+      // evenly spaced and symmetric around the point where they meet the name.
+      tx = tb.left - hb.left - 4;
+      ty = tb.top - hb.top + tb.height * 0.48;
+      var n = sources.length;
+      var step = Math.min(38, (2 * ty - 60) / (n - 1), (2 * (h - ty) - 60) / (n - 1));
+      var top = ty - step * (n - 1) / 2;
+      var x0 = 150;
+      var endX = tx - 24;
+      function fan(y) {
+        return "M" + x0 + "," + y + " C" + (x0 + (endX - x0) * 0.55) + "," + y + " " +
+               (endX - (endX - x0) * 0.3) + "," + ty + " " + endX + "," + ty;
+      }
+      for (var i = 0; i < n; i++) {
+        var y0 = top + i * step;
+        paths.push(fan(y0));
+        if (i < n - 1) { paths.push("faint:" + fan(y0 + step / 3)); paths.push("faint:" + fan(y0 + 2 * step / 3)); }
+        var t = el("text", { x: x0 - 12, y: y0, "text-anchor": "end", "dominant-baseline": "central", "class": "src" });
+        t.textContent = sources[i];
+        svg.appendChild(t);
+        svg.appendChild(el("circle", { cx: x0, cy: y0, r: 2.25, "class": "dot" }));
+      }
+      paths.push("main:M" + endX + "," + ty + " L" + (tx - 6) + "," + ty);
+    } else {
+      tx = tb.left - hb.left + 2;
+      ty = tb.top - hb.top - 10;
+      var m = 13, y1 = 26, endY = ty - 18;
+      for (var j = 0; j < m; j++) {
+        var x1 = 6 + j * ((w - 12) / (m - 1));
+        paths.push("M" + x1 + "," + y1 + " C" + x1 + "," + (y1 + (endY - y1) * 0.55) + " " + tx + "," + (endY - (endY - y1) * 0.3) + " " + tx + "," + endY);
+        svg.appendChild(el("circle", { cx: x1, cy: y1, r: 2.25, "class": "dot" }));
+      }
+      paths.push("main:M" + tx + "," + endY + " L" + tx + "," + (ty + 2));
+    }
+
+    paths.forEach(function (d, i) {
+      var main = d.indexOf("main:") === 0, faint = d.indexOf("faint:") === 0;
+      var p = el("path", { d: main ? d.slice(5) : faint ? d.slice(6) : d });
+      if (main) p.setAttribute("class", "main");
+      if (faint) p.setAttribute("class", "faint");
+      svg.appendChild(p);
+      if (!reduce && !drawHero.done) {
+        var len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        var delay = main ? 1350 : 40 + i * 28;
+        p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+                  { duration: main ? 350 : 1100, delay: delay, easing: "cubic-bezier(.3,.6,.2,1)", fill: "forwards" });
+      }
+    });
+    drawHero.done = true;
+  }
+
+  function drawLineage(box) {
+    var old = box.querySelector("svg");
+    if (old) old.remove();
+    var svg = el("svg", { "aria-hidden": "true" });
+    box.insertBefore(svg, box.firstChild);
+    var bb = box.getBoundingClientRect();
+    var cols = box.querySelectorAll(".col");
+    var vertical = getComputedStyle(box).gridAutoFlow.indexOf("row") === 0;
+
+    // Arrowhead so every connection reads left to right
+    var defs = el("defs", {});
+    var mk = el("marker", { id: "ah" + (++drawLineage.n), viewBox: "0 0 8 8", refX: "7", refY: "4",
+                            markerWidth: "7", markerHeight: "7", orient: "auto" });
+    mk.appendChild(el("path", { d: "M0,0.5 L7,4 L0,7.5", "class": "ah" }));
+    defs.appendChild(mk);
+    svg.appendChild(defs);
+    var arrow = "url(#" + mk.id + ")";
+
+    function mid(r, side) {
+      return { x: (side === "r" ? r.right : r.left) - bb.left, y: r.top + r.height / 2 - bb.top };
+    }
+
+    for (var c = 0; c < cols.length - 1; c++) {
+      // Vertical edges inside a group (for example, models feeding views)
+      cols[c].querySelectorAll(".n[data-v]").forEach(function (n) {
+        var r1 = n.getBoundingClientRect(), r2 = document.getElementById(n.getAttribute("data-v")).getBoundingClientRect();
+        var x = r1.left + r1.width / 2 - bb.left;
+        var down = r1.bottom <= r2.top;
+        var ya = (down ? r1.bottom : r1.top) - bb.top, yb = (down ? r2.top - 2 : r2.bottom + 2) - bb.top;
+        svg.appendChild(el("path", { d: "M" + x + "," + ya + " L" + x + "," + yb, "marker-end": arrow }));
+      });
+
+      if (vertical) {
+        var y1 = cols[c].getBoundingClientRect().bottom - bb.top + 5;
+        var y2 = cols[c + 1].getBoundingClientRect().top - bb.top - 5;
+        svg.appendChild(el("path", { d: "M18," + y1 + " L18," + y2, "marker-end": arrow }));
+        continue;
+      }
+      var from = Array.prototype.map.call(cols[c].querySelectorAll(".n"), function (n) { return mid(n.getBoundingClientRect(), "r"); });
+      var to = Array.prototype.map.call(cols[c + 1].querySelectorAll(".n"), function (n) { return mid(n.getBoundingClientRect(), "l"); });
+
+      // Explicit edges: nodes name their targets with data-to
+      var srcNodes = cols[c].querySelectorAll(".n[data-to]");
+      if (srcNodes.length) {
+        srcNodes.forEach(function (n) {
+          var a = mid(n.getBoundingClientRect(), "r");
+          n.getAttribute("data-to").split(",").forEach(function (id) {
+            var tgt = document.getElementById(id.trim());
+            if (!tgt) return;
+            var b = mid(tgt.getBoundingClientRect(), "l");
+            var k = (b.x - a.x) * 0.5;
+            svg.appendChild(el("path", { d: "M" + a.x + "," + a.y + " C" + (a.x + k) + "," + a.y + " " + (b.x - k) + "," + b.y + " " + (b.x - 2) + "," + b.y, "marker-end": arrow }));
+          });
+        });
+        continue;
+      }
+
+      // One-to-one columns: each item maps straight to its counterpart
+      if (cols[c].getAttribute("data-link") === "pair" && from.length === to.length) {
+        for (var p = 0; p < from.length; p++) {
+          svg.appendChild(el("path", { d: "M" + from[p].x + "," + from[p].y + " L" + (to[p].x - 2) + "," + to[p].y, "marker-end": arrow }));
+        }
+        continue;
+      }
+
+      // Otherwise the stage merges at one junction, then fans out to the next stage
+      var x1 = Math.max.apply(null, from.map(function (f) { return f.x; }));
+      var x2 = Math.min.apply(null, to.map(function (t) { return t.x; }));
+      var jx = (x1 + x2) / 2;
+      var all = from.concat(to);
+      var jy = all.reduce(function (s, q) { return s + q.y; }, 0) / all.length;
+      from.forEach(function (f) {
+        var k = (jx - f.x) * 0.75;
+        svg.appendChild(el("path", { d: "M" + f.x + "," + f.y + " C" + (f.x + k) + "," + f.y + " " + (jx - (jx - f.x) * 0.25) + "," + jy + " " + jx + "," + jy }));
+      });
+      to.forEach(function (t) {
+        var k = (t.x - jx) * 0.75;
+        svg.appendChild(el("path", { d: "M" + jx + "," + jy + " C" + (jx + (t.x - jx) * 0.25) + "," + jy + " " + (t.x - k) + "," + t.y + " " + (t.x - 2) + "," + t.y, "marker-end": arrow }));
+      });
+      svg.appendChild(el("circle", { cx: jx, cy: jy, r: 3.5, "class": "junction" }));
+    }
+  }
+  drawLineage.n = 0;
+
+  function drawSpecimen(fig) {
+    var svg = fig.querySelector(".sp-lines");
+    svg.innerHTML = "";
+    var fb = fig.getBoundingClientRect();
+    var target = fig.querySelector(".tokens").getBoundingClientRect();
+    var defs = el("defs", {});
+    var mk = el("marker", { id: "spah", viewBox: "0 0 8 8", refX: "7", refY: "4", markerWidth: "7", markerHeight: "7", orient: "auto" });
+    mk.appendChild(el("path", { d: "M0,0.5 L7,4 L0,7.5", "class": "ah" }));
+    defs.appendChild(mk); svg.appendChild(defs);
+    var stacked = getComputedStyle(fig).gridTemplateColumns.split(" ").length < 3;
+    if (stacked) {
+      var last = fig.querySelector(".sp-before").getBoundingClientRect();
+      var y1 = last.bottom - fb.top + 6, y2 = fig.querySelector(".sp-after").getBoundingClientRect().top - fb.top - 6;
+      svg.appendChild(el("path", { d: "M18," + y1 + " L18," + y2, "marker-end": "url(#spah)" }));
+      return;
+    }
+    var tx = target.left - fb.left - 8, ty = target.top + 18 - fb.top;
+    var raws = fig.querySelectorAll(".raw");
+    raws.forEach(function (r, i) {
+      var b = r.getBoundingClientRect();
+      var x = b.right - fb.left, y = b.top + b.height / 2 - fb.top;
+      var k = (tx - x) * 0.55;
+      var last = i === raws.length - 1;
+      svg.appendChild(el("path", { d: "M" + x + "," + y + " C" + (x + k) + "," + y + " " + (tx - k * 0.6) + "," + ty + " " + tx + "," + ty,
+        "marker-end": last ? "url(#spah)" : "" }));
+    });
+  }
+
+  function drawRollout(fig) {
+    var svg = fig.querySelector(".sp-lines");
+    svg.innerHTML = "";
+    var fb = fig.getBoundingClientRect();
+    var tgt = fig.querySelector(".ro-target .group").getBoundingClientRect();
+    var defs = el("defs", {});
+    var mk = el("marker", { id: "roah", viewBox: "0 0 8 8", refX: "7", refY: "4", markerWidth: "7", markerHeight: "7", orient: "auto" });
+    mk.appendChild(el("path", { d: "M0,0.5 L7,4 L0,7.5", "class": "ah" }));
+    defs.appendChild(mk); svg.appendChild(defs);
+    var stacked = getComputedStyle(fig.querySelector(".ro-body")).gridTemplateColumns.split(" ").length < 3;
+    if (stacked) {
+      var rb = fig.querySelector(".ro-rows").getBoundingClientRect();
+      svg.appendChild(el("path", { d: "M18," + (rb.bottom - fb.top + 6) + " L18," + (tgt.top - fb.top - 6), "marker-end": "url(#roah)" }));
+      return;
+    }
+    var tx = tgt.left - fb.left - 2, ty = tgt.top + tgt.height / 2 - fb.top;
+    var ends = fig.querySelectorAll(".seg.s4");
+    ends.forEach(function (e, i) {
+      var b = e.getBoundingClientRect();
+      var x = b.right - fb.left + 4, y = b.top + b.height / 2 - fb.top;
+      var k = (tx - x) * 0.5;
+      svg.appendChild(el("path", { d: "M" + x + "," + y + " C" + (x + k) + "," + y + " " + (tx - k * 0.6) + "," + ty + " " + tx + "," + ty,
+        "marker-end": i === ends.length - 1 ? "url(#roah)" : "" }));
+    });
+  }
+
+  function drawAll() {
+    drawHero();
+    document.querySelectorAll(".lineage").forEach(drawLineage);
+    document.querySelectorAll(".specimen").forEach(drawSpecimen);
+    document.querySelectorAll(".rollout").forEach(drawRollout);
+  }
+
+  var t;
+  window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(drawAll, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll); else window.addEventListener("load", drawAll);
+})();
+</script>
+</body>
+</html>
